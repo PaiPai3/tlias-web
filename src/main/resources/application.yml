@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: tlias-web
+  datasource:
+    url: jdbc:mysql://localhost:3306/tlias
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: '1234'  # 数字建议加引号避免类型识别问题
+  servlet:
+    multipart:
+      max-file-size: 10MB
+
+# mybatis配置
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+
+# 阿里云OSS配置
+aliyun:
+  oss:
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    bucketName: java-web-mxs
+    region: cn-beijing
