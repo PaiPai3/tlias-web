@@ -1,7 +1,6 @@
 package com.example.controller;
 
-import com.example.pojo.JobOption;
-import com.example.pojo.Result;
+import com.example.pojo.*;
 import com.example.service.EmpService;
 import com.example.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +27,30 @@ public class ReportController {
         return Result.success(jobOption);
     }
 
+    /*
+        获取员工性别分布
+     */
     @GetMapping("/empGenderData")
     public Result getEmpGenderData(){
         List<Map<String,Object>> genderList = reportService.getEmpGenderData();
         return Result.success(genderList);
+    }
+
+    /*
+        统计学历分布
+     */
+    @GetMapping("/studentDegreeData")
+    public Result getStudentDegreeData(){
+        List<StudentDegreeData> list = reportService.getStudentDegreeData();
+        return Result.success(list);
+    }
+
+    /*
+        统计班级人数
+     */
+    @GetMapping("/studentCountData")
+    public Result getStudentCountData(){
+        StudentCountData studentCountData = reportService.getStudentCountData();
+        return Result.success(studentCountData);
     }
 }
