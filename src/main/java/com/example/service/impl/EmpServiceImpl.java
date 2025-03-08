@@ -5,6 +5,7 @@ import com.example.mapper.EmpMapper;
 import com.example.pojo.*;
 import com.example.service.EmpLogService;
 import com.example.service.EmpService;
+import com.example.utils.JwtUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -112,12 +115,31 @@ public class EmpServiceImpl implements EmpService {
         //2.删除工作经历
         empExprMapper.deleteByEmpIds(List.of(emp.getId()));
         //3.重新插入工作经历
-        if(!CollectionUtils.isEmpty(emp.getExprList())){
+        if (!CollectionUtils.isEmpty(emp.getExprList())) {
             emp.getExprList().forEach(empExpr -> {
                 empExpr.setEmpId(emp.getId());
             });
             empExprMapper.insertBatch(emp.getExprList());
         }
+    }
+
+    /*
+        登录方法
+     */
+    @Override
+    public LoginInfo login(Emp emp) {
+        //查询员工账号密码
+        Emp e = empMapper.selectByUsernameAndPassword(emp);
+        //未查询到用户
+        if (e == null) return null;
+        //查询到了用户
+        //生成JWT令牌
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", e.getId());
+        claims.put("password", e.getPassword());
+        String jwt = JwtUtils.generateToken(claims);
+        //返回登录信息
+        return new LoginInfo(e.getId(), e.getUsername(), e.getName(), jwt);
     }
 
 }
